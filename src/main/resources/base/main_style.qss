@@ -1,0 +1,17 @@
+#main_window {
+	height: 600px;
+	width: 600px;
+}
+
+#left_img {
+	qproperty-alignment: AlignLeft;
+}
+
+#right_img {
+	qproperty-alignment: AlignRight;
+}
+
+#footer {
+	color: #555555;
+	qproperty-alignment: AlignCenter;
+}
