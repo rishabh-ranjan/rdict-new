@@ -1,0 +1,20 @@
+/* order of selectors is important here
+ * to resolve conflict between selectors of equal specificity
+ */
+
+.label {
+	font-style: italic;
+}
+
+.item {
+	color: red;
+}
+
+.word {
+	font-weight: bold;
+}
+
+.word_child .item {
+	color: blue;
+}
+
