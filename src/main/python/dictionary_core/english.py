@@ -24,30 +24,36 @@ def parse():
     with open(cssfile) as cf:
         css = cf.read()
 
-# recursively builds formatted HTML string for val
-tabstr = '&nbsp;' * 4
-br = '<br/>'
-def toHtml(val, indent = 0, res = ''):
+# returns HTML string for data element d
+def toHtml(d):
 
-    if type(val) == dict:
-        for k, v in val.items():
+    tab = '&nbsp;' * 4
+    br = '<br/>'
+    bullet = '•'
 
-            kc = k.strip().lower()
-            for i in range(len(kc)):
-                if kc[i] not in string.ascii_lowercase:
-                    kc = kc[:i] + '_' + kc[i + 1:]
+    res = f'<span class="word"> {d["word"]} </span>{br * 2}\n'
 
-            res += f'{indent * tabstr}<span class = "label {kc}">{k}</span>{br}\n'
-            res += f'<span class = "content {kc}_child">\n'
-            res = toHtml(v, indent + 1, res)
-            res += '</span>\n'
+    for word_type, multiple in d['meaning'].items():
+        
+        res += f'<span class="word_type"> {word_type} </span>{br * 2}\n'
 
-    elif type(val) == list:
-        for v in val:
-            res = toHtml(v, indent, res)
+        for single in multiple:
 
-    else:
-        res += f'{indent * tabstr}<span class = "item">{val}</span>{br}\n'
+            res += f'<span class="bullet"> {bullet} </span>'
+            res += f'<span class="definition"> {single["definition"]} </span>{br}\n'
+            
+            if 'example' in single:
+                res += f'{tab}<span class="example_label"> example: </span>{br}\n'
+                res += f'{tab * 2}<span class="example"> "{single["example"]}" </span>{br}\n'
+
+            if 'synonyms' in single:
+                res += f'{tab}<span class="synonyms_label"> synonyms: </span>{br}\n'
+                res += f'{tab * 2}<span class="synonyms">'
+                for sy in single['synonyms'][:-1]:
+                    res += f'{sy}, '
+                res += f'{single["synonyms"][-1]}.</span>{br}\n'
+
+            res += f'{br}'
 
     return res
 
@@ -71,9 +77,10 @@ def define(word):
         else:
             hi = mid - 1
 
-    style = f'<style>\n{css}\n</style>\n'
+    style = f'<style>\n{css}</style>\n'
     if res is None:
-        return style + '<span class = "not_found">Sorry! Word not found.</span>'
+        # TODO: .not_found CSS
+        return style + '<span class="not_found"> Sorry! Word not found. </span>'
     else:
         return style + toHtml(res)
 

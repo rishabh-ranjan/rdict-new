@@ -69,7 +69,7 @@ class MainWindow(QMainWindow):
         window.setLayout(layout)
 
         self.setWindowTitle('Word Book')
-        self.resize(600, 600)
+        self.resize(500, 600)
         self.move(0,0) # TODO: remove this
         self.setCentralWidget(window)
 
@@ -152,7 +152,7 @@ class MainWindow(QMainWindow):
 
         self.english_box.clear()
         self.english_box.appendHtml(english.define(word))
-        self.english_box.appendPlainText(english.define(word))
+        #self.english_box.appendPlainText(english.define(word))
         self.english_box.verticalScrollBar().triggerAction(QScrollBar.SliderToMinimum)
 
 if __name__ == '__main__':

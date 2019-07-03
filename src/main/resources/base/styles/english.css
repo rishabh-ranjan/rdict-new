@@ -1,20 +1,38 @@
-/* order of selectors is important here
- * to resolve conflict between selectors of equal specificity
- */
-
-.label {
-	font-style: italic;
-}
-
-.item {
-	color: red;
+* {
+	font-size: 14px;
 }
 
 .word {
-	font-weight: bold;
+	color: #000080;
+	font-weight: bold; 
+	font-size: 16px;
 }
 
-.word_child .item {
-	color: blue;
+.word_type {
+	font-size: 10px;
+	font-weight: 500;
+	text-transform: uppercase;
+	background-color: #eeeeee;
+	color: #000000;
+} 
+
+.bullet {
+	color: #ee7600;
+}
+
+.example_label, .synonyms_label {
+	font-style: italic;
+	font-size: 13px;
+	color: #505050;
+}
+
+.example {
+	font-size: 13px;
+	color: #4b0082;
+}
+
+.synonyms {
+	font-size: 13px;
+	color: #316a47;
 }
 
