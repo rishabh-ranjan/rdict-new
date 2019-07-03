@@ -35,7 +35,9 @@ def toHtml(d):
 
     for word_type, multiple in d['meaning'].items():
         
-        res += f'<span class="word_type"> {word_type} </span>{br * 2}\n'
+        # derivative words can have '' as word_type. eg. ate
+        if word_type:
+            res += f'<span class="word_type"> {word_type} </span>{br * 2}\n'
 
         for single in multiple:
 
@@ -48,7 +50,7 @@ def toHtml(d):
 
             if 'synonyms' in single:
                 res += f'{tab}<span class="synonyms_label"> synonyms: </span>{br}\n'
-                res += f'{tab * 2}<span class="synonyms">'
+                res += f'{tab * 2}<span class="synonyms"> '
                 for sy in single['synonyms'][:-1]:
                     res += f'{sy}, '
                 res += f'{single["synonyms"][-1]}.</span>{br}\n'
@@ -59,7 +61,6 @@ def toHtml(d):
 
 # return formatted word definition
 def define(word):
-    global data
 
     # binary search
     lo = 0

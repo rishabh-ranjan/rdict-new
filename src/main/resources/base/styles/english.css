@@ -1,15 +1,11 @@
-* {
-	font-size: 14px;
-}
-
 .word {
+	font-size: 17px;
 	color: #000080;
 	font-weight: bold; 
-	font-size: 16px;
 }
 
 .word_type {
-	font-size: 10px;
+	font-size: 11px;
 	font-weight: 500;
 	text-transform: uppercase;
 	background-color: #eeeeee;
@@ -17,22 +13,32 @@
 } 
 
 .bullet {
+	font-size: 15px;
 	color: #ee7600;
 }
 
+.definition {
+	font-size: 15px;
+}
+
 .example_label, .synonyms_label {
+	font-size: 14px;
 	font-style: italic;
-	font-size: 13px;
 	color: #505050;
 }
 
 .example {
-	font-size: 13px;
+	font-size: 14px;
 	color: #4b0082;
 }
 
 .synonyms {
-	font-size: 13px;
+	font-size: 14px;
 	color: #316a47;
+}
+
+.not_found {
+	font-size: 15px;
+	color: red;
 }
 

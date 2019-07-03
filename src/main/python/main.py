@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
 
+# TODO: set slider to minimum after tab switch for first time after a word has been searched
+
 from fbs_runtime.application_context.PyQt5 import ApplicationContext
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
 import dictionary_core.english as english
+import dictionary_core.hindi as hindi
 
 import sys
 
@@ -13,19 +16,29 @@ appctxt = None
 
 def main():
     global appctxt
-    appctxt = ApplicationContext()       # 1. Instantiate ApplicationContext
+    appctxt = ApplicationContext()
 
     # TODO: load_window
 
     # loading
     english.parse()
+    hindi.parse()
     main_window = MainWindow()
     
     # TODO: connect to click event on load_window
     main_window.show()
 
-    exit_code = appctxt.app.exec_()      # 2. Invoke appctxt.app.exec_()
-    sys.exit(exit_code)
+    # there seems to be some time lag when devanagari characters have to be rendered
+    # in hindi_box tab page for the first time.
+    # this prevents awkward lag when first hindi page switch is performed.
+    main_window.tabs.setCurrentWidget(main_window.hindi_box)
+    ri = 'ऋ'
+    main_window.hindi_box.appendHtml(ri)
+    main_window.hindi_box.clear()
+    main_window.tabs.setCurrentWidget(main_window.english_box)
+
+    exit_code = appctxt.app.exec_()
+    sys.exit(exit_code) # clean exit
 
 class MainWindow(QMainWindow):
 
@@ -40,6 +53,7 @@ class MainWindow(QMainWindow):
         # defined in make_output_box
         self.english_box = None
         self.hindi_box = None
+        self.tabs = None
 
         qss_src = appctxt.get_resource('styles/main_style.qss')
         with open(qss_src) as qss_file:
@@ -47,10 +61,6 @@ class MainWindow(QMainWindow):
         self.setStyleSheet(qss)
 
         self.initUI()
-
-        # Debug phase only
-        self.search_box.setText('sky')
-        self.go()
 
     def initUI(self):
         header = self.make_header()
@@ -69,19 +79,20 @@ class MainWindow(QMainWindow):
         window.setLayout(layout)
 
         self.setWindowTitle('Word Book')
-        self.resize(500, 600)
-        self.move(0,0) # TODO: remove this
+        self.resize(600, 600)
         self.setCentralWidget(window)
 
     def make_header(self):
+        height = 70
+
         left_img_src = appctxt.get_resource('images/f4t_logo.png')
-        left_img = QPixmap(left_img_src).scaledToHeight(64, Qt.SmoothTransformation)
+        left_img = QPixmap(left_img_src).scaledToHeight(height, Qt.SmoothTransformation)
         left_label = QLabel()
         left_label.setObjectName('left_img')
         left_label.setPixmap(left_img)
 
         right_img_src = appctxt.get_resource('images/nss_logo.png')
-        right_img = QPixmap(right_img_src).scaledToHeight(64, Qt.SmoothTransformation)
+        right_img = QPixmap(right_img_src).scaledToHeight(height, Qt.SmoothTransformation)
         right_label = QLabel()
         right_label.setObjectName('right_img')
         right_label.setPixmap(right_img)
@@ -120,13 +131,13 @@ class MainWindow(QMainWindow):
 
         self.hindi_box = QPlainTextEdit()
         self.hindi_box.setReadOnly(True)
-        
-        tabs = QTabWidget()
-        tabs.addTab(self.english_box, 'English')
-        tabs.addTab(self.hindi_box, 'Hindi')
 
+        self.tabs = QTabWidget()
+        self.tabs.addTab(self.english_box, 'English')
+        self.tabs.addTab(self.hindi_box, 'Hindi')
+                
         layout = QHBoxLayout()
-        layout.addWidget(tabs)
+        layout.addWidget(self.tabs)
 
         output_box = QWidget()
         output_box.setLayout(layout)
@@ -147,13 +158,28 @@ class MainWindow(QMainWindow):
     def go(self):
         word = self.search_box.text()
         # all words in data must be in lower case
-        # TODO: hindi data
         word = word.strip().lower()
 
-        self.english_box.clear()
-        self.english_box.appendHtml(english.define(word))
-        #self.english_box.appendPlainText(english.define(word))
-        self.english_box.verticalScrollBar().triggerAction(QScrollBar.SliderToMinimum)
+        # renders visible tab page first
+        if self.tabs.currentWidget() is self.english_box:
+
+            self.english_box.clear()
+            self.english_box.appendHtml(english.define(word))
+            self.english_box.verticalScrollBar().triggerAction(QScrollBar.SliderToMinimum)
+
+            self.hindi_box.clear()
+            self.hindi_box.appendHtml(hindi.define(word))
+            self.hindi_box.verticalScrollBar().triggerAction(QScrollBar.SliderToMinimum)
+
+        elif self.tabs.currentWidget() is self.hindi_box:
+
+            self.hindi_box.clear()
+            self.hindi_box.appendHtml(hindi.define(word))
+            self.hindi_box.verticalScrollBar().triggerAction(QScrollBar.SliderToMinimum)
+
+            self.english_box.clear()
+            self.english_box.appendHtml(english.define(word))
+            self.english_box.verticalScrollBar().triggerAction(QScrollBar.SliderToMinimum)
 
 if __name__ == '__main__':
     main()
