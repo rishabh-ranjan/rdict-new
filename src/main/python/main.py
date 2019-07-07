@@ -12,35 +12,33 @@ import dictionary_core.hindi as hindi
 
 import sys
 
-appctxt = None
+class LoadWindow(QWidget):
 
-def main():
-    global appctxt
-    appctxt = ApplicationContext()
+    def __init__(self):
+        super().__init__()
 
-    # TODO: load_window
+        bg_img_src = appctxt.get_resource('images/bad_bg.jpeg')
+        bg_img = QPixmap(bg_img_src)
+        container = QLabel()
+        container.setPixmap(bg_img)
+        layout = QHBoxLayout()
+        layout.addWidget(container)
+        self.setLayout(layout)
 
-    # loading
-    english.parse()
-    hindi.parse()
-    main_window = MainWindow()
-    
-    # TODO: connect to click event on load_window
-    main_window.show()
+        self.mousePressEvent = self.f
 
-    # there seems to be some time lag when devanagari characters have to be rendered
-    # in hindi_box tab page for the first time.
-    # this prevents awkward lag when first hindi page switch is performed.
-    main_window.tabs.setCurrentWidget(main_window.hindi_box)
-    ri = 'ऋ'
-    main_window.hindi_box.appendHtml(ri)
-    main_window.hindi_box.clear()
-    main_window.tabs.setCurrentWidget(main_window.english_box)
+    def f(self, *argv):
+        app_window.setCentralWidget(main_window)
 
-    exit_code = appctxt.app.exec_()
-    sys.exit(exit_code) # clean exit
+        ## there was some lag in switching to Hindi tab the first time
+        ## devanagari characters have to be rendered there.
+        ## this clubs that lag with the loading time, for a better user experience.
+        #main_window.tabs.setCurrentWidget(main_window.hindi_box)
+        #main_window.hindi_box.appendHtml('\u0900') # a devanagari character
+        #main_window.tabs.setCurrentWidget(main_window.english_box)
+        #main_window.hindi_box.clear()
 
-class MainWindow(QMainWindow):
+class MainWindow(QWidget):
 
     def __init__(self):
         super().__init__()
@@ -74,13 +72,15 @@ class MainWindow(QMainWindow):
         layout.addWidget(output_box)
         layout.addWidget(footer)
 
-        window = QWidget()
-        window.setObjectName('main_window')
-        window.setLayout(layout)
+        #window = QWidget()
+        #window.setObjectName('main_window')
+        #window.setLayout(layout)
 
+        self.setObjectName('main_window')
+        self.setLayout(layout)
         self.setWindowTitle('Word Book')
         self.resize(600, 600)
-        self.setCentralWidget(window)
+        #self.setCentralWidget(window)
 
     def make_header(self):
         height = 70
@@ -182,5 +182,33 @@ class MainWindow(QMainWindow):
             self.english_box.verticalScrollBar().triggerAction(QScrollBar.SliderToMinimum)
 
 if __name__ == '__main__':
-    main()
+
+    appctxt = ApplicationContext()
+
+    app_window = QMainWindow()
+    app_window.resize(600, 600)
+    app_window.setWindowTitle('Word Book')
+
+    main_window = MainWindow()
+    load_window = LoadWindow() # needs main_window to exist before this
+
+    #app_window.setCentralWidget(main_window)
+
+    ## there was some lag in switching to Hindi tab the first time
+    ## devanagari characters have to be rendered there.
+    ## this clubs that lag with the loading time, for a better user experience.
+    #main_window.tabs.setCurrentWidget(main_window.hindi_box)
+    #main_window.hindi_box.appendHtml('\u0900') # a devanagari character
+    #main_window.tabs.setCurrentWidget(main_window.english_box)
+    #main_window.hindi_box.clear()
+
+    app_window.setCentralWidget(load_window)
+    app_window.show()
+
+    # loading
+    english.parse()
+    hindi.parse()
+
+    exit_code = appctxt.app.exec_()
+    sys.exit(exit_code) # clean exit
 
