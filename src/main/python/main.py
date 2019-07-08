@@ -11,6 +11,7 @@ import dictionary_core.english as english
 import dictionary_core.hindi as hindi
 
 import sys
+import time
 
 class LoadWindow(QWidget):
 
@@ -25,18 +26,20 @@ class LoadWindow(QWidget):
         layout.addWidget(container)
         self.setLayout(layout)
 
-        self.mousePressEvent = self.f
+        self.mousePressEvent = self.show_main
 
-    def f(self, *argv):
-        app_window.setCentralWidget(main_window)
+    def show_main(self, *argv):
 
         ## there was some lag in switching to Hindi tab the first time
         ## devanagari characters have to be rendered there.
         ## this clubs that lag with the loading time, for a better user experience.
-        #main_window.tabs.setCurrentWidget(main_window.hindi_box)
-        #main_window.hindi_box.appendHtml('\u0900') # a devanagari character
-        #main_window.tabs.setCurrentWidget(main_window.english_box)
-        #main_window.hindi_box.clear()
+        main_window.hindi_box.appendHtml('\u0900') # a devanagari character
+        main_window.tabs.setCurrentWidget(main_window.hindi_box)
+
+        app_window.setCentralWidget(main_window)
+
+        main_window.tabs.setCurrentWidget(main_window.english_box)
+        main_window.hindi_box.clear()
 
 class MainWindow(QWidget):
 
@@ -72,15 +75,10 @@ class MainWindow(QWidget):
         layout.addWidget(output_box)
         layout.addWidget(footer)
 
-        #window = QWidget()
-        #window.setObjectName('main_window')
-        #window.setLayout(layout)
-
         self.setObjectName('main_window')
         self.setLayout(layout)
         self.setWindowTitle('Word Book')
         self.resize(600, 600)
-        #self.setCentralWidget(window)
 
     def make_header(self):
         height = 70
@@ -190,20 +188,10 @@ if __name__ == '__main__':
     app_window.setWindowTitle('Word Book')
 
     main_window = MainWindow()
-    load_window = LoadWindow() # needs main_window to exist before this
+    load_window = LoadWindow()
 
-    #app_window.setCentralWidget(main_window)
-
-    ## there was some lag in switching to Hindi tab the first time
-    ## devanagari characters have to be rendered there.
-    ## this clubs that lag with the loading time, for a better user experience.
-    #main_window.tabs.setCurrentWidget(main_window.hindi_box)
-    #main_window.hindi_box.appendHtml('\u0900') # a devanagari character
-    #main_window.tabs.setCurrentWidget(main_window.english_box)
-    #main_window.hindi_box.clear()
-
-    app_window.setCentralWidget(load_window)
     app_window.show()
+    app_window.setCentralWidget(load_window)
 
     # loading
     english.parse()
