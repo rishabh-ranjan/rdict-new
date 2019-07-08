@@ -1,20 +1,20 @@
 .word {
-	font-size: 17px;
+	font-size: 18px;
 	color: #000080;
 	font-weight: bold; 
 }
 
 .bullet {
-	font-size: 15px;
+	font-size: 16px;
 	color: #ee7600;
 }
 
 .definition {
-	font-size: 15px;
+	font-size: 16px;
 }
 
 .not_found {
-	font-size: 15px;
+	font-size: 16px;
 	color: red;
 }
 
