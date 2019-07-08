@@ -56,7 +56,7 @@ class MainWindow(QMainWindow):
         self.tabs = None
 
         qss_src = appctxt.get_resource('styles/main_style.qss')
-        with open(qss_src) as qss_file:
+        with open(qss_src, encoding = 'utf8') as qss_file:
             qss = qss_file.read()
         self.setStyleSheet(qss)
 
