@@ -17,11 +17,11 @@ def parse():
     datafile = appctxt.get_resource('dictionary_data/english.json')
     cssfile = appctxt.get_resource('styles/english.css')
 
-    with open(datafile) as df:
+    with open(datafile, encoding = 'utf8') as df:
         raw = df.read()
     data = json.loads(raw)
 
-    with open(cssfile) as cf:
+    with open(cssfile, encoding = 'utf8') as cf:
         css = cf.read()
 
 # returns HTML string for data element d

@@ -13,7 +13,7 @@ def parse():
     datafile = appctxt.get_resource('dictionary_data/hindi.txt')
     cssfile = appctxt.get_resource('styles/hindi.css')
 
-    with open(datafile) as df:
+    with open(datafile, encoding = 'utf8') as df:
         dlim = '\t'
         ilim = ','
         data = {}
@@ -21,7 +21,7 @@ def parse():
             l = line.split(dlim)
             data[l[0]] = l[1].split(ilim)
 
-    with open(cssfile) as cf:
+    with open(cssfile, encoding = 'utf8') as cf:
         css = cf.read()
 
 # returns HTML string for data element d (key, value pair)
